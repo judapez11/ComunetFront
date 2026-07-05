@@ -3,8 +3,11 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import Planes from './pages/Planes'
+import PlanesMunicipio from './pages/PlanesMunicipio'
 import Cobertura from './pages/Cobertura'
 import Contacto from './pages/Contacto'
+import Nosotros from './pages/Nosotros'
+import Politicas from './pages/Politicas'
 import Login from './pages/Login'
 import Dashboard from './pages/admin/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -29,8 +32,11 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/planes" element={<Planes />} />
+          <Route path="/planes/:municipioId" element={<PlanesMunicipio />} />
           <Route path="/cobertura" element={<Cobertura />} />
           <Route path="/contacto" element={<Contacto />} />
+          <Route path="/nosotros" element={<Nosotros />} />
+          <Route path="/politicas" element={<Politicas />} />
           <Route path="/login" element={<Login />} />
           <Route
             path="/admin"

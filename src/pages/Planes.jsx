@@ -1,37 +1,19 @@
 import { useState, useEffect } from 'react'
-import { getMunicipios, getPlanesByMunicipio } from '../api'
+import { useNavigate } from 'react-router-dom'
+import { getCoberturas } from '../api'
+import { Icon } from '../components/Icon'
 
 export default function Planes() {
-  const [municipios, setMunicipios] = useState([])
-  const [municipioId, setMunicipioId] = useState('')
-  const [loadingMun, setLoadingMun] = useState(true)
-  const [planes, setPlanes] = useState(null)
-  const [loadingPlanes, setLoadingPlanes] = useState(false)
+  const navigate = useNavigate()
+  const [coberturas, setCoberturas] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getMunicipios()
-      .then(setMunicipios)
+    getCoberturas()
+      .then(setCoberturas)
       .catch(() => {})
-      .finally(() => setLoadingMun(false))
+      .finally(() => setLoading(false))
   }, [])
-
-  const handleSearch = async () => {
-    if (!municipioId) return
-    setLoadingPlanes(true)
-    setPlanes(null)
-    setError(null)
-    try {
-      const data = await getPlanesByMunicipio(municipioId)
-      setPlanes(data)
-    } catch {
-      setPlanes([])
-    } finally {
-      setLoadingPlanes(false)
-    }
-  }
-
-  const formatPrice = (price) =>
-    '$' + Math.round(price).toLocaleString('es-CO')
 
   return (
     <>
@@ -44,82 +26,57 @@ export default function Planes() {
 
       <section className="section">
         <div className="container">
-          <div style={styles.selector}>
-            <h2 style={styles.selectorTitle}>¿Dónde vives?</h2>
-            <p style={styles.selectorDesc}>
-              Elige tu municipio para consultar los planes de internet disponibles en tu zona.
+          <div style={styles.header}>
+            <h2 style={styles.title}>Municipios con cobertura</h2>
+            <p style={styles.subtitle}>
+              Haz clic en tu municipio para conocer los planes de internet que tenemos para ti.
             </p>
-            <div style={styles.searchBox}>
-              <select
-                value={municipioId}
-                onChange={(e) => setMunicipioId(e.target.value)}
-                style={styles.select}
-                disabled={loadingMun}
-              >
-                <option value="">
-                  {loadingMun ? 'Cargando...' : 'Selecciona un municipio'}
-                </option>
-                {municipios.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.nombre} - {m.departamento}
-                  </option>
-                ))}
-              </select>
-              <button
-                className="btn btn-primary"
-                onClick={handleSearch}
-                disabled={!municipioId || loadingPlanes}
-              >
-                {loadingPlanes ? 'Buscando...' : 'Consultar'}
-              </button>
-            </div>
           </div>
 
-          {loadingPlanes && <div className="spinner" />}
+          {loading && <div className="spinner" />}
 
-          {planes !== null && !loadingPlanes && (
-            <>
-              {planes.length === 0 ? (
-                <div style={styles.emptyState}>
-                  <span style={styles.emptyIcon}>📡</span>
-                  <h3 style={styles.emptyTitle}>No hay cobertura disponible aún</h3>
-                  <p style={styles.emptyDesc}>
-                    Actualmente no tenemos planes disponibles en este municipio.
-                    Estamos trabajando para expandir nuestra red. Déjanos tus datos en{' '}
-                    <a href="/contacto">Contacto</a> y te avisaremos cuando lleguemos.
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <div style={styles.resultInfo}>
-                    {planes.length} plan{planes.length !== 1 ? 'es' : ''} disponible
-                    {planes.length !== 1 ? 's' : ''} en{' '}
-                    <strong>{municipios.find((m) => m.id === Number(municipioId))?.nombre}</strong>
+          {!loading && coberturas.length === 0 && (
+            <div style={styles.emptyState}>
+              <div style={styles.emptyIconWrap}><Icon name="signal" size={48} color="var(--text-light)" /></div>
+              <h3 style={styles.emptyTitle}>Aun no hay cobertura disponible</h3>
+              <p style={styles.emptyDesc}>
+                Estamos expandiendo nuestra red. Dejamos tus datos en{' '}
+                <a href="/contacto">Contacto</a> y te avisaremos cuando lleguemos a tu zona.
+              </p>
+            </div>
+          )}
+
+          {!loading && coberturas.length > 0 && (
+            <div style={styles.grid}>
+              {coberturas.map((c) => (
+                <button
+                  key={c.id}
+                  style={styles.card}
+                  onClick={() => navigate(`/planes/${c.municipioId}`)}
+                  className="card-hover"
+                >
+                  <div style={styles.imageWrapper}>
+                    <img
+                      src="/municipio-placeholder.svg"
+                      alt={c.nombreMunicipio}
+                      style={styles.image}
+                    />
+                    <div style={styles.techBadge}>
+                      <Icon name="fiber" size={14} color="#fff" />
+                      <span>{c.tecnologia?.replace('_', ' ')}</span>
+                    </div>
                   </div>
-                  <div style={styles.grid}>
-                    {planes.map((plan) => (
-                      <div key={plan.id} className="card" style={styles.card}>
-                        <div style={styles.cardBadge}>{plan.tipo || 'HOGAR'}</div>
-                        <h3 style={styles.cardTitle}>{plan.nombre}</h3>
-                        <div style={styles.cardSpeed}>
-                          <span style={styles.speedValue}>{plan.velocidadMb}</span>
-                          <span style={styles.speedUnit}>MB</span>
-                        </div>
-                        <p style={styles.cardTech}>{plan.tecnologia?.replace('_', ' ')}</p>
-                        <p style={styles.cardDesc}>{plan.descripcion}</p>
-                        <div style={styles.cardPrice}>
-                          <span style={styles.priceValue}>{formatPrice(plan.precio)}</span>
-                          <span style={styles.priceUnit}>/mes</span>
-                        </div>
-                        <a href="/contacto" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                          Lo quiero
-                        </a>
-                      </div>
-                    ))}
+                  <div style={styles.cardBody}>
+                    <h3 style={styles.cardTitle}>{c.nombreMunicipio}</h3>
+                    <p style={styles.cardDept}>{c.departamentoMunicipio}</p>
+                    <div style={styles.cardAction}>
+                      <span>Ver planes</span>
+                      <Icon name="arrowLeft" size={16} color="var(--primary)" style={{ transform: 'rotate(180deg)' }} />
+                    </div>
                   </div>
-                </>
-              )}
-            </>
+                </button>
+              ))}
+            </div>
           )}
         </div>
       </section>
@@ -128,130 +85,116 @@ export default function Planes() {
 }
 
 const styles = {
-  selector: {
-    maxWidth: 560,
-    margin: '0 auto',
+  header: {
     textAlign: 'center',
-    marginBottom: 48,
+    marginBottom: 56,
   },
-  selectorTitle: {
-    fontSize: 24,
+  title: {
+    fontSize: 32,
     fontWeight: 700,
     color: 'var(--secondary)',
-    marginBottom: 8,
+    marginBottom: 12,
   },
-  selectorDesc: {
+  subtitle: {
     color: 'var(--text-light)',
-    fontSize: 15,
-    marginBottom: 24,
-  },
-  searchBox: {
-    display: 'flex',
-    gap: 12,
-  },
-  select: {
-    flex: 1,
-    padding: '12px 16px',
-    borderRadius: 8,
-    border: '2px solid var(--border)',
-    fontSize: 15,
-    fontFamily: 'inherit',
-    background: '#fff',
-  },
-  resultInfo: {
-    textAlign: 'center',
-    fontSize: 15,
-    color: 'var(--text-light)',
-    marginBottom: 32,
+    fontSize: 17,
+    maxWidth: 560,
+    margin: '0 auto',
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: 28,
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+    gap: 32,
   },
   card: {
-    textAlign: 'center',
-    padding: '32px 24px',
+    display: 'flex',
+    flexDirection: 'column',
+    background: '#fff',
+    borderRadius: 20,
+    border: '1px solid var(--border)',
+    overflow: 'hidden',
+    cursor: 'pointer',
+    padding: 0,
+    textAlign: 'left',
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  },
+  imageWrapper: {
+    width: '100%',
+    height: 180,
+    background: 'var(--primary-light)',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  techBadge: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    background: 'var(--gradient-primary)',
+    color: '#fff',
+    padding: '6px 12px',
+    borderRadius: 20,
+    fontSize: 11,
+    fontWeight: 600,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 4,
+    textTransform: 'uppercase',
+  },
+  cardBody: {
+    padding: 24,
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
   },
-  cardBadge: {
-    display: 'inline-block',
-    background: 'var(--primary-light)',
-    color: 'var(--primary)',
-    padding: '4px 14px',
-    borderRadius: 20,
-    fontSize: 12,
-    fontWeight: 600,
-    alignSelf: 'center',
-    textTransform: 'uppercase',
-  },
   cardTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 700,
     color: 'var(--secondary)',
+    margin: 0,
   },
-  cardSpeed: {
+  cardDept: {
+    fontSize: 14,
+    color: 'var(--text-light)',
+    margin: 0,
+  },
+  cardAction: {
     display: 'flex',
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    gap: 4,
-    margin: '12px 0',
-  },
-  speedValue: {
-    fontSize: 48,
-    fontWeight: 800,
-    color: 'var(--primary)',
-    lineHeight: 1,
-  },
-  speedUnit: {
-    fontSize: 20,
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 12,
+    fontSize: 14,
     fontWeight: 600,
-    color: 'var(--text-light)',
-  },
-  cardTech: {
-    fontSize: 13,
-    color: 'var(--text-light)',
-    fontWeight: 500,
-  },
-  cardDesc: {
-    fontSize: 14,
-    color: 'var(--text-light)',
-    lineHeight: 1.5,
-    margin: '4px 0 12px',
-  },
-  cardPrice: {
-    margin: '8px 0 16px',
-  },
-  priceValue: {
-    fontSize: 32,
-    fontWeight: 800,
-    color: 'var(--accent)',
-  },
-  priceUnit: {
-    fontSize: 14,
-    color: 'var(--text-light)',
+    color: 'var(--primary)',
   },
   emptyState: {
     textAlign: 'center',
-    padding: '60px 20px',
+    padding: '80px 20px',
     maxWidth: 480,
     margin: '0 auto',
   },
-  emptyIcon: {
-    fontSize: 56,
-    display: 'block',
-    marginBottom: 20,
+  emptyIconWrap: {
+    width: 88,
+    height: 88,
+    borderRadius: 22,
+    background: 'var(--bg-alt)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0 auto 24px',
   },
   emptyTitle: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 700,
     color: 'var(--secondary)',
     marginBottom: 12,
   },
   emptyDesc: {
-    fontSize: 15,
+    fontSize: 16,
     color: 'var(--text-light)',
     lineHeight: 1.7,
   },

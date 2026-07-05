@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getMunicipios, getCoberturaByMunicipio } from '../api'
+import { Icon } from '../components/Icon'
 
 export default function Cobertura() {
   const [municipios, setMunicipios] = useState([])
@@ -41,9 +42,9 @@ export default function Cobertura() {
       <section className="section">
         <div className="container">
           <div style={styles.checker}>
-            <h2 style={styles.checkerTitle}>¿Dónde llegamos?</h2>
+            <h2 style={styles.checkerTitle}>Donde llegamos?</h2>
             <p style={styles.checkerDesc}>
-              Selecciona tu municipio para verificar la disponibilidad de nuestro servicio de fibra óptica.
+              Selecciona tu municipio para verificar la disponibilidad de nuestro servicio de fibra optica.
             </p>
 
             <div style={styles.form}>
@@ -73,22 +74,26 @@ export default function Cobertura() {
 
             {cobertura && (
               <div style={styles.result}>
-                <span style={styles.resultIcon}>✅</span>
+                <div style={styles.resultIconWrap}>
+                  <Icon name="check" size={28} color="var(--success)" />
+                </div>
                 <div>
-                  <h3 style={styles.resultTitle}>¡Tenemos cobertura!</h3>
+                  <h3 style={styles.resultTitle}>Tenemos cobertura!</h3>
                   <p style={styles.resultText}>
                     {cobertura.nombreMunicipio}, {cobertura.departamentoMunicipio} cuenta con
-                    tecnología <strong>{cobertura.tecnologia?.replace('_', ' ')}</strong>.
+                    tecnologia <strong>{cobertura.tecnologia?.replace('_', ' ')}</strong>.
                   </p>
                 </div>
               </div>
             )}
 
             {cobertura === null && selected && !checking && (
-              <div style={{ ...styles.result, borderColor: '#fecaca', background: '#fef2f2' }}>
-                <span style={styles.resultIcon}>❌</span>
+              <div style={{ ...styles.result, borderColor: '#FECACA', background: '#FEF2F2' }}>
+                <div style={{ ...styles.resultIconWrap, background: '#FEE2E2' }}>
+                  <Icon name="x" size={28} color="var(--danger)" />
+                </div>
                 <div>
-                  <h3 style={{ ...styles.resultTitle, color: 'var(--danger)' }}>Sin cobertura aún</h3>
+                  <h3 style={{ ...styles.resultTitle, color: 'var(--danger)' }}>Sin cobertura aun</h3>
                   <p style={styles.resultText}>
                     Pronto estaremos llevando nuestro servicio a este municipio.
                   </p>
@@ -98,11 +103,11 @@ export default function Cobertura() {
           </div>
 
           <div style={styles.info}>
-            <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Expansión de red</h3>
+            <h3 style={{ fontSize: 22, fontWeight: 700, marginBottom: 16 }}>Expansion de red</h3>
             <p style={{ color: 'var(--text-light)', lineHeight: 1.7 }}>
-              Estamos trabajando constantemente para expandir nuestra red de fibra óptica a más
-              municipios de Colombia. Si no encuentras tu municipio en la lista, no te preocupes —
-              déjanos tus datos en la sección de <a href="/contacto">Contacto</a> y te avisaremos
+              Estamos trabajando constantemente para expandir nuestra red de fibra optica a mas
+              municipios de Colombia. Si no encuentras tu municipio en la lista, no te preocupes -
+              dejanos tus datos en la seccion de <a href="/contacto">Contacto</a> y te avisaremos
               cuando tengamos cobertura en tu zona.
             </p>
           </div>
@@ -114,62 +119,72 @@ export default function Cobertura() {
 
 const styles = {
   checker: {
-    maxWidth: 600,
+    maxWidth: 640,
     margin: '0 auto',
     textAlign: 'center',
   },
   checkerTitle: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 700,
     color: 'var(--secondary)',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   checkerDesc: {
     color: 'var(--text-light)',
-    fontSize: 16,
-    marginBottom: 32,
+    fontSize: 17,
+    marginBottom: 40,
   },
   form: {
     display: 'flex',
-    gap: 12,
+    gap: 16,
   },
   select: {
     flex: 1,
-    padding: '12px 16px',
-    borderRadius: 8,
+    padding: '14px 20px',
+    borderRadius: 12,
     border: '2px solid var(--border)',
     fontSize: 15,
     fontFamily: 'inherit',
     background: '#fff',
+    transition: 'all 0.3s ease',
   },
   result: {
     display: 'flex',
-    gap: 16,
+    gap: 20,
     alignItems: 'flex-start',
-    marginTop: 28,
-    padding: '20px 24px',
-    borderRadius: 'var(--radius)',
-    border: '1px solid #bbf7d0',
-    background: '#f0fdf4',
+    marginTop: 32,
+    padding: '24px 28px',
+    borderRadius: 16,
+    border: '1px solid #A7F3D0',
+    background: 'var(--accent-light)',
     textAlign: 'left',
   },
-  resultIcon: { fontSize: 28, lineHeight: 1 },
+  resultIconWrap: {
+    width: 52,
+    height: 52,
+    borderRadius: 14,
+    background: '#D1FAE5',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
   resultTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 700,
     color: 'var(--success)',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   resultText: {
-    fontSize: 14,
+    fontSize: 15,
     color: 'var(--text-light)',
-    lineHeight: 1.5,
+    lineHeight: 1.6,
   },
   info: {
-    marginTop: 64,
-    padding: '32px',
+    marginTop: 72,
+    padding: '40px',
     background: 'var(--bg-alt)',
-    borderRadius: 'var(--radius)',
+    borderRadius: 20,
     textAlign: 'center',
   },
 }
