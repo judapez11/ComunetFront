@@ -36,7 +36,7 @@ export default function Contacto() {
         </div>
       </div>
 
-      <section className="section">
+      <section className="section" style={{ background: '#fff' }}>
         <div className="container">
           <div className="contacto-grid">
             <div>
@@ -86,28 +86,28 @@ export default function Contacto() {
             <div style={styles.info}>
               <h3 style={{ fontSize: 22, fontWeight: 700, marginBottom: 24 }}>Informacion de contacto</h3>
               <div style={styles.infoItem}>
-                <div style={styles.infoIconWrap}><Icon name="pin" size={22} color="var(--primary)" /></div>
+                <div style={styles.infoIconWrap}><Icon name="pin" size={22} color="var(--secondary)" /></div>
                 <div>
                   <strong>Direccion</strong>
                   <p style={styles.infoText}>Calle 5 #3-40, Centro San Pedro, Valle del Cauca</p>
                 </div>
               </div>
               <div style={styles.infoItem}>
-                <div style={styles.infoIconWrap}><Icon name="phone" size={22} color="var(--primary)" /></div>
+                <div style={styles.infoIconWrap}><Icon name="phone" size={22} color="var(--secondary)" /></div>
                 <div>
                   <strong>WhatsApp</strong>
                   <p style={styles.infoText}>+57 315 239 6188</p>
                 </div>
               </div>
               <div style={styles.infoItem}>
-                <div style={styles.infoIconWrap}><Icon name="mail" size={22} color="var(--primary)" /></div>
+                <div style={styles.infoIconWrap}><Icon name="mail" size={22} color="var(--secondary)" /></div>
                 <div>
                   <strong>Email</strong>
                   <p style={styles.infoText}>info@comunetmax.com</p>
                 </div>
               </div>
               <div style={styles.infoItem}>
-                <div style={styles.infoIconWrap}><Icon name="clock" size={22} color="var(--primary)" /></div>
+                <div style={styles.infoIconWrap}><Icon name="clock" size={22} color="var(--secondary)" /></div>
                 <div>
                   <strong>Horario</strong>
                   <p style={styles.infoText}>Lun - Vie: 8:00 AM - 6:00 PM<br/>Sab: 9:00 AM - 1:00 PM</p>
@@ -118,13 +118,14 @@ export default function Contacto() {
 
           <div style={styles.mapSection}>
             <h3 style={styles.mapTitle}>Nuestra Ubicacion</h3>
+            <div style={styles.underline} />
             <p style={styles.mapDesc}>Visitanos en nuestro punto de atencion en San Pedro, Valle del Cauca</p>
             <div style={styles.mapWrapper}>
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3978.5!2d-76.25!3d4.25!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNMKwMTUnMDAuMCJOIDc2wrAxNScwMC4wIlc!5e0!3m2!1ses!2sco!4v1234567890"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31854.44444444444!2d-76.2000000!3d4.0833333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e39063939393939%3A0x3939393939393939!2zVHVsdcOhLCBWYWxsZSBkZWwgQ2F1Y2EsIENvbG9tYmlh!5e0!3m2!1ses!2sco!4v1710000000000!5m2!1ses!2sco"
                 width="100%"
-                height="400"
-                style={{ border: 0, borderRadius: 16 }}
+                height="450"
+                style={{ border: 0, borderRadius: 12 }}
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -140,23 +141,23 @@ export default function Contacto() {
 
 const styles = {
   title: {
-    fontSize: 32,
-    fontWeight: 700,
-    color: 'var(--secondary)',
-    marginBottom: 16,
+    fontSize: 42,
+    fontWeight: 800,
+    color: 'var(--text)',
+    marginBottom: 12,
+    letterSpacing: '-0.01em',
   },
   desc: {
     color: 'var(--text-light)',
-    fontSize: 17,
+    fontSize: 19,
     marginBottom: 32,
     lineHeight: 1.7,
   },
   info: {
-    background: 'var(--gradient-card)',
+    background: 'var(--bg-alt)',
     padding: 36,
-    borderRadius: 20,
+    borderRadius: 12,
     border: '1px solid var(--border)',
-    boxShadow: 'var(--shadow)',
   },
   infoItem: {
     display: 'flex',
@@ -167,8 +168,8 @@ const styles = {
   infoIconWrap: {
     width: 48,
     height: 48,
-    borderRadius: 12,
-    background: 'var(--primary-light)',
+    borderRadius: 14,
+    background: 'rgba(121, 192, 250, 0.2)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -185,18 +186,26 @@ const styles = {
     textAlign: 'center',
   },
   mapTitle: {
-    fontSize: 32,
-    fontWeight: 700,
-    color: 'var(--secondary)',
-    marginBottom: 12,
+    fontSize: 42,
+    fontWeight: 800,
+    color: 'var(--text)',
+    marginBottom: 16,
+    letterSpacing: '-0.01em',
+  },
+  underline: {
+    height: 4,
+    width: 80,
+    background: 'var(--primary)',
+    margin: '0 auto 24px',
+    borderRadius: 4,
   },
   mapDesc: {
     color: 'var(--text-light)',
-    fontSize: 17,
+    fontSize: 19,
     marginBottom: 40,
   },
   mapWrapper: {
-    borderRadius: 20,
+    borderRadius: 12,
     overflow: 'hidden',
     boxShadow: 'var(--shadow-lg)',
     border: '1px solid var(--border)',

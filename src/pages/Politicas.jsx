@@ -10,13 +10,13 @@ export default function Politicas() {
         </div>
       </div>
 
-      <section className="section">
+      <section className="section" style={{ background: '#fff' }}>
         <div className="container">
           <div style={styles.content}>
             <div className="card" style={styles.section}>
               <div style={styles.sectionHeader}>
                 <div style={styles.sectionIconWrap}>
-                  <Icon name="doc" size={24} color="var(--primary)" />
+                  <Icon name="doc" size={24} color="var(--secondary)" />
                 </div>
                 <h2 style={styles.sectionTitle}>Terminos y Condiciones</h2>
               </div>
@@ -31,7 +31,7 @@ export default function Politicas() {
             <div className="card" style={styles.section}>
               <div style={styles.sectionHeader}>
                 <div style={styles.sectionIconWrap}>
-                  <Icon name="shield" size={24} color="var(--primary)" />
+                  <Icon name="shield" size={24} color="var(--secondary)" />
                 </div>
                 <h2 style={styles.sectionTitle}>Politica de Privacidad</h2>
               </div>
@@ -46,7 +46,7 @@ export default function Politicas() {
             <div className="card" style={styles.section}>
               <div style={styles.sectionHeader}>
                 <div style={styles.sectionIconWrap}>
-                  <Icon name="speed" size={24} color="var(--primary)" />
+                  <Icon name="speed" size={24} color="var(--secondary)" />
                 </div>
                 <h2 style={styles.sectionTitle}>Uso Aceptable de la Red</h2>
               </div>
@@ -61,7 +61,7 @@ export default function Politicas() {
             <div className="card" style={styles.section}>
               <div style={styles.sectionHeader}>
                 <div style={styles.sectionIconWrap}>
-                  <Icon name="headset" size={24} color="var(--primary)" />
+                  <Icon name="headset" size={24} color="var(--secondary)" />
                 </div>
                 <h2 style={styles.sectionTitle}>Soporte y Garantia</h2>
               </div>
@@ -77,7 +77,7 @@ export default function Politicas() {
             <div className="card" style={styles.section}>
               <div style={styles.sectionHeader}>
                 <div style={styles.sectionIconWrap}>
-                  <Icon name="network" size={24} color="var(--primary)" />
+                  <Icon name="network" size={24} color="var(--secondary)" />
                 </div>
                 <h2 style={styles.sectionTitle}>Cobertura y Velocidad</h2>
               </div>
@@ -101,7 +101,7 @@ const styles = {
     margin: '0 auto',
     display: 'flex',
     flexDirection: 'column',
-    gap: 28,
+    gap: 24,
   },
   section: {
     padding: '36px',
@@ -116,7 +116,7 @@ const styles = {
     width: 48,
     height: 48,
     borderRadius: 14,
-    background: 'var(--primary-light)',
+    background: 'rgba(121, 192, 250, 0.2)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -125,7 +125,7 @@ const styles = {
   sectionTitle: {
     fontSize: 22,
     fontWeight: 700,
-    color: 'var(--secondary)',
+    color: 'var(--text)',
   },
   sectionText: {
     fontSize: 16,

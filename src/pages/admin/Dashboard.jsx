@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { auth } from '../../auth'
 import { getMunicipios, getCoberturas, getCoberturaByMunicipio, asignarCobertura, deleteCobertura, getPlanesByMunicipio, createPlan, updatePlan, deletePlan } from '../../api'
@@ -20,6 +20,21 @@ export default function Dashboard() {
   const [munDepto, setMunDepto] = useState('')
   const [creandoMun, setCreandoMun] = useState(false)
   const [error, setError] = useState('')
+  const [munImage, setMunImage] = useState(null)
+  const [munSearch, setMunSearch] = useState('')
+  const [showMunList, setShowMunList] = useState(false)
+  const [deptoSearch, setDeptoSearch] = useState('')
+  const [showDeptoList, setShowDeptoList] = useState(false)
+  const munSearchRef = useRef(null)
+  const deptoSearchRef = useRef(null)
+
+  const getImage = (municipioId) => {
+    try {
+      return localStorage.getItem(`mun_img_${municipioId}`) || '/media/municipio-placeholder.svg'
+    } catch {
+      return '/media/municipio-placeholder.svg'
+    }
+  }
 
   const departamentos = [...new Set(municipios.map((m) => m.departamento))].sort()
 
@@ -50,17 +65,58 @@ export default function Dashboard() {
       .finally(() => setLoading(false))
   }, [])
 
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (munSearchRef.current && !munSearchRef.current.contains(e.target)) {
+        setShowMunList(false)
+      }
+      if (deptoSearchRef.current && !deptoSearchRef.current.contains(e.target)) {
+        setShowDeptoList(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  const deptosFiltrados = departamentos.filter((d) =>
+    d.toLowerCase().includes(deptoSearch.toLowerCase())
+  )
+
+  const municipiosFiltrados = municipios.filter(
+    (m) => m.departamento === munDepto && m.nombre.toLowerCase().includes(munSearch.toLowerCase())
+  )
+
+  const seleccionarMunicipio = (m) => {
+    setMunId(String(m.id))
+    setMunSearch(m.nombre)
+    setShowMunList(false)
+  }
+
+  const seleccionarDepartamento = (d) => {
+    setMunDepto(d)
+    setDeptoSearch(d)
+    setShowDeptoList(false)
+    setMunId('')
+    setMunSearch('')
+  }
+
   const handleAgregarCobertura = async (e) => {
     e.preventDefault()
     if (!munId || !munDepto) return
     setCreandoMun(true)
     try {
       await asignarCobertura(Number(munId), 'FIBRA_OPTICA')
+      if (munImage) {
+        localStorage.setItem(`mun_img_${munId}`, munImage)
+      }
       const nuevasCoberturas = await getCoberturas()
       setCoberturas(nuevasCoberturas)
       setShowMunForm(false)
       setMunId('')
       setMunDepto('')
+      setMunSearch('')
+      setDeptoSearch('')
+      setMunImage(null)
     } catch (err) {
       if (!handleAuthErr(err)) alert('Error al asignar cobertura')
     } finally {
@@ -147,7 +203,7 @@ export default function Dashboard() {
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '24px 0 16px' }}>
             <h2 style={{ fontSize: 20, fontWeight: 700 }}>Municipios con cobertura</h2>
-            <button className="btn btn-primary btn-sm" onClick={() => { setMunId(''); setMunDepto(''); setShowMunForm(true) }}>
+            <button className="btn btn-primary btn-sm" onClick={() => { setMunId(''); setMunDepto(''); setMunSearch(''); setDeptoSearch(''); setMunImage(null); setShowMunForm(true) }}>
               + Añadir Cobertura
             </button>
           </div>
@@ -161,7 +217,7 @@ export default function Dashboard() {
                   <span style={{ fontSize: 48, display: 'block', marginBottom: 16 }}>📡</span>
                   <h3 style={{ fontSize: 20, fontWeight: 700, color: 'var(--secondary)', marginBottom: 8 }}>No hay municipios con cobertura</h3>
                   <p style={{ marginBottom: 24 }}>Aún no has añadido ningún municipio. Crea el primero.</p>
-                  <button className="btn btn-primary" onClick={() => { setMunId(''); setMunDepto(''); setShowMunForm(true) }}>
+                  <button className="btn btn-primary" onClick={() => { setMunId(''); setMunDepto(''); setMunSearch(''); setDeptoSearch(''); setMunImage(null); setShowMunForm(true) }}>
                     + Añadir Cobertura
                   </button>
                 </div>
@@ -169,6 +225,7 @@ export default function Dashboard() {
                 <table style={table}>
                   <thead>
                     <tr>
+                      <th style={th}></th>
                       <th style={th}>Municipio</th>
                       <th style={th}>Departamento</th>
                       <th style={th}>Tecnología</th>
@@ -178,6 +235,14 @@ export default function Dashboard() {
                   <tbody>
                     {coberturas.map((c) => (
                       <tr key={c.id} style={tr}>
+                        <td style={{ ...td, width: 50 }}>
+                          <img
+                            src={getImage(c.municipioId)}
+                            alt={c.nombreMunicipio}
+                            style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover' }}
+                            onError={(e) => { e.target.src = '/media/municipio-placeholder.svg' }}
+                          />
+                        </td>
                         <td style={{ ...td, fontWeight: 600 }}>{c.nombreMunicipio}</td>
                         <td style={td}>{c.departamentoMunicipio}</td>
                         <td style={td}>
@@ -279,32 +344,93 @@ export default function Dashboard() {
             <form onSubmit={handleAgregarCobertura} style={{ padding: 28 }}>
               <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20, color: 'var(--secondary)' }}>Añadir Cobertura</h2>
 
-              <div className="form-group">
+              <div className="form-group" ref={deptoSearchRef}>
                 <label>Departamento</label>
-                {departamentos.length > 0 ? (
-                  <select value={munDepto} onChange={(e) => { setMunDepto(e.target.value); setMunId('') }} required style={selectStyle}>
-                    <option value="">Selecciona un departamento</option>
-                    {departamentos.map((d) => <option key={d} value={d}>{d}</option>)}
-                  </select>
-                ) : (
-                  <p style={{ color: 'var(--text-light)', fontSize: 14 }}>No hay departamentos disponibles. Debes agregar municipios primero desde la base de datos.</p>
+                <input
+                  value={deptoSearch}
+                  onChange={(e) => { setDeptoSearch(e.target.value); setMunDepto(''); setMunId(''); setMunSearch('') }}
+                  onFocus={() => setShowDeptoList(true)}
+                  placeholder="Busca un departamento..."
+                  required
+                  style={inputStyle}
+                />
+                {showDeptoList && (
+                  <div style={dropdownList}>
+                    {deptosFiltrados.length === 0 ? (
+                      <div style={{ padding: 12, color: 'var(--text-light)', fontSize: 14, textAlign: 'center' }}>No se encontraron departamentos</div>
+                    ) : (
+                      deptosFiltrados.map((d) => (
+                        <div
+                          key={d}
+                          onClick={() => seleccionarDepartamento(d)}
+                          style={dropdownItem}
+                          onMouseEnter={(e) => e.target.style.background = 'var(--bg-alt)'}
+                          onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                        >{d}</div>
+                      ))
+                    )}
+                  </div>
                 )}
               </div>
 
               {munDepto && (
-                <div className="form-group">
+                <div className="form-group" ref={munSearchRef}>
                   <label>Municipio</label>
-                  <select value={munId} onChange={(e) => setMunId(e.target.value)} required style={selectStyle}>
-                    <option value="">Selecciona un municipio</option>
-                    {municipios.filter((m) => m.departamento === munDepto).map((m) => (
-                      <option key={m.id} value={m.id}>{m.nombre}</option>
-                    ))}
-                  </select>
-                  {municipios.filter((m) => m.departamento === munDepto).length === 0 && (
-                    <p style={{ fontSize: 13, color: 'var(--text-light)', marginTop: 4 }}>No hay municipios registrados en este departamento.</p>
+                  <input
+                    value={munSearch}
+                    onChange={(e) => { setMunSearch(e.target.value); setMunId('') }}
+                    onFocus={() => setShowMunList(true)}
+                    placeholder="Busca un municipio..."
+                    required
+                    style={inputStyle}
+                  />
+                  {showMunList && (
+                    <div style={dropdownList}>
+                      {municipiosFiltrados.length === 0 ? (
+                        <div style={{ padding: 12, color: 'var(--text-light)', fontSize: 14, textAlign: 'center' }}>
+                          No se encontraron municipios
+                        </div>
+                      ) : (
+                        municipiosFiltrados.map((m) => (
+                          <div
+                            key={m.id}
+                            onClick={() => seleccionarMunicipio(m)}
+                            style={dropdownItem}
+                            onMouseEnter={(e) => e.target.style.background = 'var(--bg-alt)'}
+                            onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                          >
+                            {m.nombre}
+                          </div>
+                        ))
+                      )}
+                    </div>
                   )}
                 </div>
               )}
+
+              <div className="form-group">
+                <label>Imagen del municipio (opcional)</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0]
+                    if (file) {
+                      const reader = new FileReader()
+                      reader.onload = (ev) => setMunImage(ev.target.result)
+                      reader.readAsDataURL(file)
+                    }
+                  }}
+                  style={{ ...inputStyle, padding: '10px 16px' }}
+                />
+                {munImage && (
+                  <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <img src={munImage} alt="preview" style={{ width: 48, height: 48, borderRadius: 8, objectFit: 'cover' }} />
+                    <span style={{ fontSize: 13, color: 'var(--text-light)' }}>Imagen seleccionada</span>
+                    <button type="button" style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', fontSize: 13 }} onClick={() => setMunImage(null)}>Quitar</button>
+                  </div>
+                )}
+              </div>
 
               <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
                 <button type="submit" className="btn btn-primary" disabled={creandoMun || !munId}>
@@ -486,4 +612,24 @@ const inputStyle = {
   border: '2px solid var(--border)',
   fontSize: 15,
   fontFamily: 'inherit',
+}
+
+const dropdownList = {
+  maxHeight: 200,
+  overflowY: 'auto',
+  border: '1px solid var(--border)',
+  borderRadius: 8,
+  marginTop: 4,
+  background: '#fff',
+  boxShadow: 'var(--shadow)',
+  zIndex: 300,
+  position: 'relative',
+}
+
+const dropdownItem = {
+  padding: '10px 16px',
+  cursor: 'pointer',
+  fontSize: 14,
+  color: 'var(--text)',
+  transition: 'background 0.1s',
 }

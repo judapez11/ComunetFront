@@ -63,4 +63,10 @@ export const deleteCobertura = (id) =>
 export const enviarContacto = (data) =>
   api.post('/ms-contacto/api/contacto', data, { responseType: 'text' }).then((r) => r.data)
 
+export const enviarContactoPlanes = (data) =>
+  api.post('/ms-contacto/api/contacto/planes', data, { responseType: 'text' }).then((r) => r.data)
+
+export const enviarContactoPqr = (data) =>
+  api.post('/ms-contacto/api/contacto/pqr', data, { responseType: 'text' }).then((r) => r.data)
+
 export default api

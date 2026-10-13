@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { getMunicipios, getCoberturaByMunicipio } from '../api'
 import { Icon } from '../components/Icon'
 
@@ -8,6 +8,9 @@ export default function Cobertura() {
   const [selected, setSelected] = useState('')
   const [cobertura, setCobertura] = useState(null)
   const [checking, setChecking] = useState(false)
+  const [search, setSearch] = useState('')
+  const [showList, setShowList] = useState(false)
+  const searchRef = useRef(null)
 
   useEffect(() => {
     getMunicipios()
@@ -16,18 +19,37 @@ export default function Cobertura() {
       .finally(() => setLoading(false))
   }, [])
 
-  const handleCheck = async () => {
-    if (!selected) return
+  useEffect(() => {
+    if (!selected) {
+      setCobertura(null)
+      return
+    }
     setChecking(true)
     setCobertura(null)
-    try {
-      const data = await getCoberturaByMunicipio(selected)
-      setCobertura(data)
-    } catch {
-      setCobertura(null)
-    } finally {
-      setChecking(false)
+    getCoberturaByMunicipio(selected)
+      .then(setCobertura)
+      .catch(() => setCobertura(null))
+      .finally(() => setChecking(false))
+  }, [selected])
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowList(false)
+      }
     }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  const filtrados = municipios.filter((m) =>
+    `${m.nombre} ${m.departamento}`.toLowerCase().includes(search.toLowerCase())
+  )
+
+  const seleccionar = (m) => {
+    setSelected(String(m.id))
+    setSearch(`${m.nombre} - ${m.departamento}`)
+    setShowList(false)
   }
 
   return (
@@ -39,7 +61,7 @@ export default function Cobertura() {
         </div>
       </div>
 
-      <section className="section">
+      <section className="section" style={{ background: '#fff' }}>
         <div className="container">
           <div style={styles.checker}>
             <h2 style={styles.checkerTitle}>Donde llegamos?</h2>
@@ -47,32 +69,36 @@ export default function Cobertura() {
               Selecciona tu municipio para verificar la disponibilidad de nuestro servicio de fibra optica.
             </p>
 
-            <div style={styles.form}>
-              <select
-                value={selected}
-                onChange={(e) => setSelected(e.target.value)}
-                style={styles.select}
-                disabled={loading}
-              >
-                <option value="">
-                  {loading ? 'Cargando municipios...' : 'Selecciona un municipio'}
-                </option>
-                {municipios.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.nombre} - {m.departamento}
-                  </option>
-                ))}
-              </select>
-              <button
-                className="btn btn-primary"
-                onClick={handleCheck}
-                disabled={!selected || checking}
-              >
-                {checking ? 'Verificando...' : 'Verificar'}
-              </button>
+            <div style={styles.form} ref={searchRef}>
+              <input
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setSelected('') }}
+                onFocus={() => setShowList(true)}
+                placeholder={loading ? 'Cargando municipios...' : 'Busca tu municipio...'}
+                style={styles.input}
+              />
+              {showList && (
+                <div style={dropdownList}>
+                  {filtrados.length === 0 ? (
+                    <div style={{ padding: 12, color: 'var(--text-light)', fontSize: 14, textAlign: 'center' }}>No se encontraron municipios</div>
+                  ) : (
+                    filtrados.map((m) => (
+                      <div
+                        key={m.id}
+                        onClick={() => seleccionar(m)}
+                        style={dropdownItem}
+                        onMouseEnter={(e) => e.target.style.background = 'var(--bg-alt)'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >{m.nombre} - {m.departamento}</div>
+                    ))
+                  )}
+                </div>
+              )}
             </div>
 
-            {cobertura && (
+            {checking && <div className="spinner" />}
+
+            {!checking && cobertura && (
               <div style={styles.result}>
                 <div style={styles.resultIconWrap}>
                   <Icon name="check" size={28} color="var(--success)" />
@@ -87,7 +113,7 @@ export default function Cobertura() {
               </div>
             )}
 
-            {cobertura === null && selected && !checking && (
+            {!checking && cobertura === null && selected && (
               <div style={{ ...styles.result, borderColor: '#FECACA', background: '#FEF2F2' }}>
                 <div style={{ ...styles.resultIconWrap, background: '#FEE2E2' }}>
                   <Icon name="x" size={28} color="var(--danger)" />
@@ -124,25 +150,30 @@ const styles = {
     textAlign: 'center',
   },
   checkerTitle: {
-    fontSize: 32,
-    fontWeight: 700,
-    color: 'var(--secondary)',
+    fontSize: 42,
+    fontWeight: 800,
+    color: 'var(--text)',
     marginBottom: 12,
+    letterSpacing: '-0.01em',
   },
   checkerDesc: {
     color: 'var(--text-light)',
-    fontSize: 17,
+    fontSize: 19,
     marginBottom: 40,
   },
   form: {
     display: 'flex',
     gap: 16,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    position: 'relative',
   },
-  select: {
+  input: {
     flex: 1,
+    minWidth: 300,
     padding: '14px 20px',
     borderRadius: 12,
-    border: '2px solid var(--border)',
+    border: '1px solid var(--border)',
     fontSize: 15,
     fontFamily: 'inherit',
     background: '#fff',
@@ -184,7 +215,30 @@ const styles = {
     marginTop: 72,
     padding: '40px',
     background: 'var(--bg-alt)',
-    borderRadius: 20,
+    borderRadius: 12,
     textAlign: 'center',
   },
+}
+
+const dropdownList = {
+  position: 'absolute',
+  top: '100%',
+  left: 0,
+  right: 0,
+  maxHeight: 200,
+  overflowY: 'auto',
+  border: '1px solid var(--border)',
+  borderRadius: 8,
+  marginTop: 4,
+  background: '#fff',
+  boxShadow: 'var(--shadow)',
+  zIndex: 300,
+}
+
+const dropdownItem = {
+  padding: '10px 16px',
+  cursor: 'pointer',
+  fontSize: 14,
+  color: 'var(--text)',
+  transition: 'background 0.1s',
 }

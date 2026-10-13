@@ -8,6 +8,14 @@ export default function Planes() {
   const [coberturas, setCoberturas] = useState([])
   const [loading, setLoading] = useState(true)
 
+  const getImage = (municipioId) => {
+    try {
+      return localStorage.getItem(`mun_img_${municipioId}`) || '/media/municipio-placeholder.svg'
+    } catch {
+      return '/media/municipio-placeholder.svg'
+    }
+  }
+
   useEffect(() => {
     getCoberturas()
       .then(setCoberturas)
@@ -24,10 +32,11 @@ export default function Planes() {
         </div>
       </div>
 
-      <section className="section">
+      <section className="section" style={{ background: '#fff' }}>
         <div className="container">
           <div style={styles.header}>
-            <h2 style={styles.title}>Municipios con cobertura</h2>
+            {/*<h2 style={styles.title}>Municipios con cobertura</h2>*/}
+            <div style={styles.underline} />
             <p style={styles.subtitle}>
               Haz clic en tu municipio para conocer los planes de internet que tenemos para ti.
             </p>
@@ -37,7 +46,7 @@ export default function Planes() {
 
           {!loading && coberturas.length === 0 && (
             <div style={styles.emptyState}>
-              <div style={styles.emptyIconWrap}><Icon name="signal" size={48} color="var(--text-light)" /></div>
+              <div style={styles.emptyIconWrap}><Icon name="network" size={48} color="var(--text-light)" /></div>
               <h3 style={styles.emptyTitle}>Aun no hay cobertura disponible</h3>
               <p style={styles.emptyDesc}>
                 Estamos expandiendo nuestra red. Dejamos tus datos en{' '}
@@ -57,9 +66,10 @@ export default function Planes() {
                 >
                   <div style={styles.imageWrapper}>
                     <img
-                      src="/municipio-placeholder.svg"
+                      src={getImage(c.municipioId)}
                       alt={c.nombreMunicipio}
                       style={styles.image}
+                      onError={(e) => { e.target.src = '/media/municipio-placeholder.svg' }}
                     />
                     <div style={styles.techBadge}>
                       <Icon name="fiber" size={14} color="#fff" />
@@ -87,36 +97,45 @@ export default function Planes() {
 const styles = {
   header: {
     textAlign: 'center',
-    marginBottom: 56,
+    marginBottom: 64,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 700,
-    color: 'var(--secondary)',
-    marginBottom: 12,
+    fontSize: 42,
+    fontWeight: 800,
+    color: 'var(--text)',
+    marginBottom: 16,
+    letterSpacing: '-0.01em',
+  },
+  underline: {
+    height: 4,
+    width: 80,
+    background: 'var(--primary)',
+    margin: '0 auto 24px',
+    borderRadius: 4,
   },
   subtitle: {
     color: 'var(--text-light)',
-    fontSize: 17,
+    fontSize: 19,
     maxWidth: 560,
     margin: '0 auto',
   },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: 32,
+    gap: 24,
   },
   card: {
     display: 'flex',
     flexDirection: 'column',
     background: '#fff',
-    borderRadius: 20,
+    borderRadius: 12,
     border: '1px solid var(--border)',
     overflow: 'hidden',
     cursor: 'pointer',
     padding: 0,
     textAlign: 'left',
     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    boxShadow: 'var(--shadow-sm)',
   },
   imageWrapper: {
     width: '100%',
@@ -137,7 +156,7 @@ const styles = {
     background: 'var(--gradient-primary)',
     color: '#fff',
     padding: '6px 12px',
-    borderRadius: 20,
+    borderRadius: 12,
     fontSize: 11,
     fontWeight: 600,
     display: 'flex',
@@ -152,13 +171,13 @@ const styles = {
     gap: 8,
   },
   cardTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 700,
-    color: 'var(--secondary)',
+    color: 'var(--text)',
     margin: 0,
   },
   cardDept: {
-    fontSize: 14,
+    fontSize: 15,
     color: 'var(--text-light)',
     margin: 0,
   },
@@ -169,7 +188,7 @@ const styles = {
     marginTop: 12,
     fontSize: 14,
     fontWeight: 600,
-    color: 'var(--primary)',
+    color: 'var(--primary-dark)',
   },
   emptyState: {
     textAlign: 'center',
@@ -180,7 +199,7 @@ const styles = {
   emptyIconWrap: {
     width: 88,
     height: 88,
-    borderRadius: 22,
+    borderRadius: 12,
     background: 'var(--bg-alt)',
     display: 'flex',
     alignItems: 'center',
@@ -190,7 +209,7 @@ const styles = {
   emptyTitle: {
     fontSize: 24,
     fontWeight: 700,
-    color: 'var(--secondary)',
+    color: 'var(--text)',
     marginBottom: 12,
   },
   emptyDesc: {

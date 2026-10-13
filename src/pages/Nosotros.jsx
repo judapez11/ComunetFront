@@ -10,12 +10,12 @@ export default function Nosotros() {
         </div>
       </div>
 
-      <section className="section">
+      <section className="section" style={{ background: '#fff' }}>
         <div className="container">
           <div className="mv-grid">
             <div className="card mv-card">
               <div style={styles.iconWrap}>
-                <Icon name="target" size={36} color="var(--primary)" />
+                <Icon name="target" size={36} color="var(--secondary)" />
               </div>
               <h2 style={styles.cardTitle}>Mision</h2>
               <p style={styles.cardText}>
@@ -28,7 +28,7 @@ export default function Nosotros() {
 
             <div className="card mv-card">
               <div style={styles.iconWrap}>
-                <Icon name="eye" size={36} color="var(--primary)" />
+                <Icon name="eye" size={36} color="var(--secondary)" />
               </div>
               <h2 style={styles.cardTitle}>Vision</h2>
               <p style={styles.cardText}>
@@ -42,6 +42,7 @@ export default function Nosotros() {
 
           <div className="card" style={styles.valuesCard}>
             <h2 style={styles.valuesTitle}>Nuestros Valores</h2>
+            <div style={styles.underline} />
             <div className="values-grid">
               {[
                 { icon: 'shield', title: 'Compromiso', desc: 'Con la calidad del servicio y la satisfaccion de nuestros clientes.' },
@@ -51,7 +52,7 @@ export default function Nosotros() {
               ].map((v) => (
                 <div key={v.title} style={styles.valueItem}>
                   <div style={styles.valueIconWrap}>
-                    <Icon name={v.icon} size={28} color="var(--primary)" />
+                    <Icon name={v.icon} size={28} color="var(--secondary)" />
                   </div>
                   <h3 style={styles.valueTitle}>{v.title}</h3>
                   <p style={styles.valueDesc}>{v.desc}</p>
@@ -69,8 +70,8 @@ const styles = {
   iconWrap: {
     width: 72,
     height: 72,
-    borderRadius: 20,
-    background: 'var(--primary-light)',
+    borderRadius: 12,
+    background: 'rgba(121, 192, 250, 0.2)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -79,7 +80,7 @@ const styles = {
   cardTitle: {
     fontSize: 26,
     fontWeight: 700,
-    color: 'var(--secondary)',
+    color: 'var(--text)',
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -95,10 +96,18 @@ const styles = {
     textAlign: 'center',
   },
   valuesTitle: {
-    fontSize: 32,
+    fontSize: 42,
     fontWeight: 800,
-    color: 'var(--secondary)',
-    marginBottom: 40,
+    color: 'var(--text)',
+    marginBottom: 16,
+    letterSpacing: '-0.01em',
+  },
+  underline: {
+    height: 4,
+    width: 80,
+    background: 'var(--primary)',
+    margin: '0 auto 40px',
+    borderRadius: 4,
   },
   valueItem: {
     textAlign: 'center',
@@ -108,7 +117,7 @@ const styles = {
     width: 56,
     height: 56,
     borderRadius: 16,
-    background: 'var(--primary-light)',
+    background: 'rgba(121, 192, 250, 0.2)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -117,7 +126,7 @@ const styles = {
   valueTitle: {
     fontSize: 18,
     fontWeight: 700,
-    color: 'var(--secondary)',
+    color: 'var(--text)',
     marginBottom: 8,
   },
   valueDesc: {
