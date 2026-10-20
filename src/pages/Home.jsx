@@ -17,11 +17,8 @@ export default function Home() {
         <div className="container" style={styles.heroInner}>
           <div style={styles.heroContent}>
             <h1 style={styles.heroTitle}>
-              Veloz, Estable <br/>y con <span style={styles.heroHighlight}>Soporte</span> real
+              Internet de Fibra Optica <br/>para tu <span style={styles.heroHighlight}>Hogar y Empresa</span>
             </h1>
-            <p style={styles.heroDesc}>
-              Paquetes de Fibra Optica disenados para tu hogar y empresa. Experimenta navegacion simetrica de <strong>300MB a 900MB</strong> sin caidas.
-            </p>
             <div style={styles.heroCta}>
               <Link to="/planes" className="btn btn-accent">
                 Ver Planes
@@ -180,7 +177,8 @@ export default function Home() {
 const styles = {
   hero: {
     background: 'linear-gradient(135deg, #5BA8F7 0%, #003D82 100%)',
-    minHeight: 500,
+    minHeight: 580,
+    marginTop: -120,
     display: 'flex',
     alignItems: 'center',
     overflow: 'hidden',
@@ -192,11 +190,27 @@ const styles = {
     gridTemplateColumns: '1fr 1fr',
     gap: 48,
     alignItems: 'center',
-    padding: '80px 0 40px',
+    padding: '170px 0 60px',
     position: 'relative',
     zIndex: 1,
   },
   heroContent: {},
+  heroBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 8,
+    background: 'rgba(255, 255, 255, 0.15)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.25)',
+    padding: '6px 14px',
+    borderRadius: 9999,
+    fontSize: 12,
+    fontWeight: 700,
+    letterSpacing: '0.04em',
+    color: '#fff',
+    marginBottom: 16,
+  },
   heroTitle: {
     fontSize: 56,
     fontWeight: 800,

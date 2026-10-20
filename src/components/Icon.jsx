@@ -8,7 +8,13 @@ export function Icon({ name, size = 24, color = 'currentColor', style = {} }) {
     ),
     speed: (
       <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={s}>
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+        <path d="M12 2v4M4.93 4.93l2.83 2.83M2 12h4M4.93 19.07l2.83-2.83M12 22v-4M19.07 19.07l-2.83-2.83M22 12h-4M19.07 4.93l-2.83 2.83" />
+      </svg>
+    ),
+    gauge: (
+      <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={s}>
+        <path d="m12 14 4-4" />
+        <path d="M3.34 19a10 10 0 1 1 17.32 0" />
       </svg>
     ),
     shield: (
