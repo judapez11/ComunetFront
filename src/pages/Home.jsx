@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import Carousel from '../components/Carousel'
+import { getCarouselImages, subscribeToMediaChanges } from '../mediaService'
 
 const features = [
   { title: 'Alta Velocidad', desc: 'Descargas y subidas ultra rapidas sin interrupciones con red de ultima generacion.' },
@@ -9,7 +11,46 @@ const features = [
   { title: 'Soporte Tecnico', desc: 'Atencion personalizada y rapida solucion con nuestro equipo experto disponible.' },
 ]
 
+const DEFAULT_SLIDES = [
+  {
+    src: '/media/municipio-placeholder.svg',
+    title: 'Instalacion de Fibra Optica',
+    desc: 'Tecnologia de ultima generacion en tu hogar',
+  },
+  {
+    gradient: 'linear-gradient(135deg, #5BA8F7 0%, #003D82 100%)',
+    title: 'Red en Expansion',
+    desc: 'Llegamos a mas municipios de Colombia',
+  },
+  {
+    gradient: 'linear-gradient(135deg, #003D82 0%, #001F4D 100%)',
+    title: 'Soporte 24/7',
+    desc: 'Estamos contigo cuando nos necesitas',
+  },
+  {
+    src: '/media/municipio-placeholder.svg',
+    title: 'Velocidad Simetrica',
+    desc: 'Navegacion real de 300MB a 900MB',
+  },
+]
+
 export default function Home() {
+  const [carouselList, setCarouselList] = useState(getCarouselImages())
+
+  useEffect(() => {
+    const unsub = subscribeToMediaChanges(() => {
+      setCarouselList(getCarouselImages())
+    })
+    return unsub
+  }, [])
+
+  const slidesToRender = carouselList.length > 0
+    ? carouselList.map((img) => ({
+        src: img.src,
+        title: img.title || 'Fibra Optica ComunetMax',
+        desc: img.desc || 'Conectate a ultra alta velocidad',
+      }))
+    : DEFAULT_SLIDES
   return (
     <>
       {/* Hero Section */}
@@ -31,7 +72,6 @@ export default function Home() {
           <div style={styles.heroVisual}>
             <div style={styles.videoPlaceholder}>
               <div style={styles.videoOverlay} />
-              <Icon name="fiber" size={56} color="#fff" style={{ marginBottom: 16 }} />
               <div style={styles.videoTitle}>Video de Fibra Optica</div>
               <p style={styles.videoDesc}>Navegacion de alta velocidad</p>
             </div>
@@ -64,28 +104,7 @@ export default function Home() {
 
           <Carousel
             height={420}
-            slides={[
-              {
-                src: '/media/municipio-placeholder.svg',
-                title: 'Instalacion de Fibra Optica',
-                desc: 'Tecnologia de ultima generacion en tu hogar',
-              },
-              {
-                gradient: 'linear-gradient(135deg, #5BA8F7 0%, #003D82 100%)',
-                title: 'Red en Expansion',
-                desc: 'Llegamos a mas municipios de Colombia',
-              },
-              {
-                gradient: 'linear-gradient(135deg, #003D82 0%, #001F4D 100%)',
-                title: 'Soporte 24/7',
-                desc: 'Estamos contigo cuando nos necesitas',
-              },
-              {
-                src: '/media/municipio-placeholder.svg',
-                title: 'Velocidad Simetrica',
-                desc: 'Navegacion real de 300MB a 900MB',
-              },
-            ]}
+            slides={slidesToRender}
           />
         </div>
       </section>
@@ -125,7 +144,6 @@ export default function Home() {
                 </div>
               </div>
               <Link to="/contacto" style={styles.contactCard}>
-                <Icon name="mail" size={32} color="var(--secondary)" />
                 <h4 style={styles.contactTitle}>Escribenos - Formulario de Contacto</h4>
                 <p style={styles.contactDesc}>Atencion personalizada inmediata</p>
               </Link>

@@ -86,28 +86,24 @@ export default function Contacto() {
             <div style={styles.info}>
               <h3 style={{ fontSize: 22, fontWeight: 700, marginBottom: 24 }}>Informacion de contacto</h3>
               <div style={styles.infoItem}>
-                <div style={styles.infoIconWrap}><Icon name="pin" size={22} color="var(--secondary)" /></div>
                 <div>
                   <strong>Direccion</strong>
                   <p style={styles.infoText}>Calle 5 #3-40, Centro San Pedro, Valle del Cauca</p>
                 </div>
               </div>
               <div style={styles.infoItem}>
-                <div style={styles.infoIconWrap}><Icon name="phone" size={22} color="var(--secondary)" /></div>
                 <div>
                   <strong>WhatsApp</strong>
                   <p style={styles.infoText}>+57 315 239 6188</p>
                 </div>
               </div>
               <div style={styles.infoItem}>
-                <div style={styles.infoIconWrap}><Icon name="mail" size={22} color="var(--secondary)" /></div>
                 <div>
                   <strong>Email</strong>
                   <p style={styles.infoText}>info@comunetmax.com</p>
                 </div>
               </div>
               <div style={styles.infoItem}>
-                <div style={styles.infoIconWrap}><Icon name="clock" size={22} color="var(--secondary)" /></div>
                 <div>
                   <strong>Horario</strong>
                   <p style={styles.infoText}>Lun - Vie: 8:00 AM - 6:00 PM<br/>Sab: 9:00 AM - 1:00 PM</p>

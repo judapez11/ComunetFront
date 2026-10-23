@@ -92,7 +92,6 @@ export default function PlanesMunicipio() {
 
           {error && !loading && (
             <div style={styles.emptyState}>
-              <div style={styles.emptyIconWrap}><Icon name="network" size={48} color="var(--text-light)" /></div>
               <h3 style={styles.emptyTitle}>No hay cobertura disponible</h3>
               <p style={styles.emptyDesc}>
                 Este municipio aun no tiene cobertura de Comunet.{' '}
@@ -105,7 +104,6 @@ export default function PlanesMunicipio() {
             <>
               {planes.length === 0 ? (
                 <div style={styles.emptyState}>
-                  <div style={styles.emptyIconWrap}><Icon name="network" size={48} color="var(--text-light)" /></div>
                   <h3 style={styles.emptyTitle}>No hay planes activos</h3>
                   <p style={styles.emptyDesc}>
                     Actualmente no tenemos planes activos en este municipio.
@@ -157,7 +155,9 @@ export default function PlanesMunicipio() {
             <form onSubmit={handleSubmit} style={{ padding: 32 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--secondary)' }}>Quiero este plan</h2>
-                <button type="button" onClick={() => setPlanSeleccionado(null)} style={closeBtn}>✕</button>
+                <button type="button" onClick={() => setPlanSeleccionado(null)} style={{ ...closeBtn, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Icon name="x" size={18} />
+                </button>
               </div>
 
               <div style={{ ...formInfo }}>

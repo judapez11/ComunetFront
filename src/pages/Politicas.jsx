@@ -14,12 +14,7 @@ export default function Politicas() {
         <div className="container">
           <div style={styles.content}>
             <div className="card" style={styles.section}>
-              <div style={styles.sectionHeader}>
-                <div style={styles.sectionIconWrap}>
-                  <Icon name="doc" size={24} color="var(--secondary)" />
-                </div>
-                <h2 style={styles.sectionTitle}>Terminos y Condiciones</h2>
-              </div>
+              <h2 style={styles.sectionTitle}>Terminos y Condiciones</h2>
               <p style={styles.sectionText}>
                 Al contratar nuestros servicios de internet por fibra optica, el usuario acepta los
                 terminos y condiciones establecidos por ComunetMax. El servicio se presta bajo las
@@ -29,12 +24,7 @@ export default function Politicas() {
             </div>
 
             <div className="card" style={styles.section}>
-              <div style={styles.sectionHeader}>
-                <div style={styles.sectionIconWrap}>
-                  <Icon name="shield" size={24} color="var(--secondary)" />
-                </div>
-                <h2 style={styles.sectionTitle}>Politica de Privacidad</h2>
-              </div>
+              <h2 style={styles.sectionTitle}>Politica de Privacidad</h2>
               <p style={styles.sectionText}>
                 ComunetMax se compromete a proteger la informacion personal de sus usuarios. Los datos
                 recopilados son utilizados exclusivamente para la prestacion del servicio, facturacion
@@ -44,12 +34,7 @@ export default function Politicas() {
             </div>
 
             <div className="card" style={styles.section}>
-              <div style={styles.sectionHeader}>
-                <div style={styles.sectionIconWrap}>
-                  <Icon name="speed" size={24} color="var(--secondary)" />
-                </div>
-                <h2 style={styles.sectionTitle}>Uso Aceptable de la Red</h2>
-              </div>
+              <h2 style={styles.sectionTitle}>Uso Aceptable de la Red</h2>
               <p style={styles.sectionText}>
                 El usuario se compromete a hacer un uso responsable de la red. Queda prohibido el uso
                 del servicio para actividades ilegales, envio de spam, distribucion de malware o
@@ -59,12 +44,7 @@ export default function Politicas() {
             </div>
 
             <div className="card" style={styles.section}>
-              <div style={styles.sectionHeader}>
-                <div style={styles.sectionIconWrap}>
-                  <Icon name="headset" size={24} color="var(--secondary)" />
-                </div>
-                <h2 style={styles.sectionTitle}>Soporte y Garantia</h2>
-              </div>
+              <h2 style={styles.sectionTitle}>Soporte y Garantia</h2>
               <p style={styles.sectionText}>
                 ComunetMax ofrece soporte tecnico 24/7 a traves de nuestros canales de atencion.
                 El equipo de instalacion (modem/router) permanece en comodato durante la vigencia
@@ -75,12 +55,7 @@ export default function Politicas() {
             </div>
 
             <div className="card" style={styles.section}>
-              <div style={styles.sectionHeader}>
-                <div style={styles.sectionIconWrap}>
-                  <Icon name="network" size={24} color="var(--secondary)" />
-                </div>
-                <h2 style={styles.sectionTitle}>Cobertura y Velocidad</h2>
-              </div>
+              <h2 style={styles.sectionTitle}>Cobertura y Velocidad</h2>
               <p style={styles.sectionText}>
                 Las velocidades publicadas corresponden a la capacidad maxima de enlace. La velocidad
                 real puede variar segun factores como la congestion de la red, el equipo del usuario,

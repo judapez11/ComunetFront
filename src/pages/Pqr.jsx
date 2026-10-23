@@ -88,8 +88,7 @@ export default function Pqr() {
                 <label>Detalle *</label>
                 <textarea name="mensaje" value={form.mensaje} onChange={handleChange} required placeholder="Describe tu queja, sugerencia o reclamo..." />
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 24, fontSize: 13, color: 'var(--text-light)' }}>
-                <Icon name="shield" size={18} color="var(--primary)" />
+              <div style={{ marginBottom: 24, fontSize: 13, color: 'var(--text-light)' }}>
                 <span>Tus datos estan protegidos segun nuestra politica de privacidad.</span>
               </div>
               <button type="submit" className="btn btn-primary" disabled={loading}>

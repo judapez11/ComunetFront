@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import MiniBannerPromo from './components/MiniBannerPromo'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
@@ -30,6 +31,7 @@ function AppContent() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      {!isLoginPage && <MiniBannerPromo />}
       {!isLoginPage && <Navbar />}
       <main style={{ flex: 1 }}>
         <Routes>

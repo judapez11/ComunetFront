@@ -2,9 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { auth } from '../../auth'
 import { getMunicipios, getCoberturas, getCoberturaByMunicipio, asignarCobertura, deleteCobertura, getPlanesByMunicipio, createPlan, updatePlan, deletePlan } from '../../api'
+import AdminMultimedia from './AdminMultimedia'
+import { Icon } from '../../components/Icon'
 
 export default function Dashboard() {
   const navigate = useNavigate()
+  const [activeTab, setActiveTab] = useState('planes') // 'planes' | 'multimedia'
   const [coberturas, setCoberturas] = useState([])
   const [municipios, setMunicipios] = useState([])
   const [loading, setLoading] = useState(true)
@@ -195,18 +198,40 @@ export default function Dashboard() {
 
   return (
     <div className="container" style={{ paddingTop: 40, paddingBottom: 40 }}>
-      <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--secondary)' }}>Panel de Administración</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--secondary)' }}>Panel de Administración</h1>
+
+        {/* Pestañas de Navegación del Admin */}
+        <div style={tabContainer}>
+          <button
+            style={activeTab === 'planes' ? activeTabBtn : tabBtn}
+            onClick={() => setActiveTab('planes')}
+          >
+            Planes y Cobertura
+          </button>
+          <button
+            style={activeTab === 'multimedia' ? activeTabBtn : tabBtn}
+            onClick={() => setActiveTab('multimedia')}
+          >
+            Multimedia y Promociones
+          </button>
+        </div>
+      </div>
 
       {error && <div className="alert alert-error" style={{ marginTop: 16 }}>{error}</div>}
 
-      {!selectedMun ? (
+      {activeTab === 'multimedia' ? (
+        <AdminMultimedia />
+      ) : (
         <>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '24px 0 16px' }}>
-            <h2 style={{ fontSize: 20, fontWeight: 700 }}>Municipios con cobertura</h2>
-            <button className="btn btn-primary btn-sm" onClick={() => { setMunId(''); setMunDepto(''); setMunSearch(''); setDeptoSearch(''); setMunImage(null); setShowMunForm(true) }}>
-              + Añadir Cobertura
-            </button>
-          </div>
+          {!selectedMun ? (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '24px 0 16px' }}>
+                <h2 style={{ fontSize: 20, fontWeight: 700 }}>Municipios con cobertura</h2>
+                <button className="btn btn-primary btn-sm" onClick={() => { setMunId(''); setMunDepto(''); setMunSearch(''); setDeptoSearch(''); setMunImage(null); setShowMunForm(true) }}>
+                  + Añadir Cobertura
+                </button>
+              </div>
 
           {loading && <div className="spinner" />}
 
@@ -214,7 +239,6 @@ export default function Dashboard() {
             <div style={tableWrap}>
               {coberturas.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-light)' }}>
-                  <span style={{ fontSize: 48, display: 'block', marginBottom: 16 }}>📡</span>
                   <h3 style={{ fontSize: 20, fontWeight: 700, color: 'var(--secondary)', marginBottom: 8 }}>No hay municipios con cobertura</h3>
                   <p style={{ marginBottom: 24 }}>Aún no has añadido ningún municipio. Crea el primero.</p>
                   <button className="btn btn-primary" onClick={() => { setMunId(''); setMunDepto(''); setMunSearch(''); setDeptoSearch(''); setMunImage(null); setShowMunForm(true) }}>
@@ -277,7 +301,9 @@ export default function Dashboard() {
               <p style={{ color: 'var(--text-light)' }}>{selectedMun.departamento}</p>
             </div>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <span style={{ ...badge, background: '#dcfce7', color: '#166534' }}>Fibra Óptica ✓</span>
+              <span style={{ ...badge, background: '#dcfce7', color: '#166534', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                Fibra Óptica <Icon name="check" size={13} color="#166534" />
+              </span>
               <button className="btn btn-sm btn-danger" onClick={handleDesconectar}>Desconectar</button>
             </div>
           </div>
@@ -337,6 +363,8 @@ export default function Dashboard() {
           )}
         </>
       )}
+      </>
+    )}
 
       {showMunForm && (
         <div style={overlay} onClick={() => setShowMunForm(false)}>
@@ -632,4 +660,40 @@ const dropdownItem = {
   fontSize: 14,
   color: 'var(--text)',
   transition: 'background 0.1s',
+}
+
+const tabContainer = {
+  display: 'inline-flex',
+  background: 'var(--bg-alt)',
+  padding: 4,
+  borderRadius: 12,
+  border: '1px solid var(--border)',
+  gap: 4,
+}
+
+const tabBtn = {
+  background: 'transparent',
+  border: 'none',
+  padding: '10px 20px',
+  borderRadius: 8,
+  fontSize: 14,
+  fontWeight: 600,
+  color: 'var(--text-light)',
+  cursor: 'pointer',
+  transition: 'all 0.2s',
+  fontFamily: 'inherit',
+}
+
+const activeTabBtn = {
+  background: '#ffffff',
+  border: 'none',
+  padding: '10px 20px',
+  borderRadius: 8,
+  fontSize: 14,
+  fontWeight: 700,
+  color: 'var(--secondary)',
+  cursor: 'pointer',
+  boxShadow: 'var(--shadow-sm)',
+  transition: 'all 0.2s',
+  fontFamily: 'inherit',
 }

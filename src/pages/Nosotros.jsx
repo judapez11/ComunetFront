@@ -14,9 +14,6 @@ export default function Nosotros() {
         <div className="container">
           <div className="mv-grid">
             <div className="card mv-card">
-              <div style={styles.iconWrap}>
-                <Icon name="target" size={36} color="var(--secondary)" />
-              </div>
               <h2 style={styles.cardTitle}>Mision</h2>
               <p style={styles.cardText}>
                 Brindar soluciones de conectividad de alta calidad mediante tecnologia de fibra optica,
@@ -27,9 +24,6 @@ export default function Nosotros() {
             </div>
 
             <div className="card mv-card">
-              <div style={styles.iconWrap}>
-                <Icon name="eye" size={36} color="var(--secondary)" />
-              </div>
               <h2 style={styles.cardTitle}>Vision</h2>
               <p style={styles.cardText}>
                 Ser el proveedor de internet lider en Colombia, reconocido por la excelencia de nuestro
@@ -45,15 +39,12 @@ export default function Nosotros() {
             <div style={styles.underline} />
             <div className="values-grid">
               {[
-                { icon: 'shield', title: 'Compromiso', desc: 'Con la calidad del servicio y la satisfaccion de nuestros clientes.' },
-                { icon: 'speed', title: 'Innovacion', desc: 'Buscamos constantemente mejorar nuestra tecnologia y procesos.' },
-                { icon: 'headset', title: 'Servicio', desc: 'Atencion personalizada y cercana para cada usuario.' },
-                { icon: 'network', title: 'Conectividad', desc: 'Trabajamos para llevar internet de calidad a todos.' },
+                { title: 'Compromiso', desc: 'Con la calidad del servicio y la satisfaccion de nuestros clientes.' },
+                { title: 'Innovacion', desc: 'Buscamos constantemente mejorar nuestra tecnologia y procesos.' },
+                { title: 'Servicio', desc: 'Atencion personalizada y cercana para cada usuario.' },
+                { title: 'Conectividad', desc: 'Trabajamos para llevar internet de calidad a todos.' },
               ].map((v) => (
                 <div key={v.title} style={styles.valueItem}>
-                  <div style={styles.valueIconWrap}>
-                    <Icon name={v.icon} size={28} color="var(--secondary)" />
-                  </div>
                   <h3 style={styles.valueTitle}>{v.title}</h3>
                   <p style={styles.valueDesc}>{v.desc}</p>
                 </div>

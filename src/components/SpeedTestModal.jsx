@@ -19,7 +19,9 @@ export default function SpeedTestModal({ isOpen, onClose }) {
               <p style={styles.subtitle}>Medidor en tiempo real potenciado por Fast.com (Netflix)</p>
             </div>
           </div>
-          <button style={styles.closeBtn} onClick={onClose} aria-label="Cerrar">✕</button>
+          <button style={{ ...styles.closeBtn, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClose} aria-label="Cerrar">
+            <Icon name="x" size={18} />
+          </button>
         </div>
 
         <div style={styles.body}>

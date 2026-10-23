@@ -46,7 +46,6 @@ export default function Planes() {
 
           {!loading && coberturas.length === 0 && (
             <div style={styles.emptyState}>
-              <div style={styles.emptyIconWrap}><Icon name="network" size={48} color="var(--text-light)" /></div>
               <h3 style={styles.emptyTitle}>Aun no hay cobertura disponible</h3>
               <p style={styles.emptyDesc}>
                 Estamos expandiendo nuestra red. Dejamos tus datos en{' '}
